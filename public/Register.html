@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>MusicDation</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+        <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet">
+    
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+        
+        <link rel="stylesheet" href="css/style.css">
+
+        <script src="//cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.min.js"></script>
+        <script src="//unpkg.com/babel-polyfill@latest/dist/polyfill.min.js"></script>
+        <script src="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.js"></script>
+    </head>
+
+	<body class="img js-fullheight" style="background-image: url(images/BackgroundRegister.jpg);">
+        <div id="app">
+            <section class="ftco-section">
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-md-6 text-center mb-5">
+                            <h2 class="heading-section"><span><img src="./images/Logo.png"></h2></a>
+                        </div>
+                    </div>
+                    <div class="row justify-content-center">
+                        <div class="col-md-6 col-lg-4">
+                            <div class="login-wrap p-0">
+                          <h3 class="mb-4 text-center">Tienes una cuenta?</h3>
+            <div>
+            <label>Nombre usuario</label>
+            <div>
+                <span><i class="glyphicon glyphicon-user"></i></span>
+                <input v-model.trim="name" class="form-control" name="name" placeholder="Nombre del usuario" type="text">
+            </div>
+            </div>
+
+			<div>
+				<label>Email</label>
+				<div>
+					<span><i class="glyphicon glyphicon-user"></i></span>
+					<input v-model.trim="email" class="form-control" name="email" placeholder="Añadir Mail" type="text">
+				</div>
+				</div>
+			  <div>
+            <label>Contraseña</label>
+            <div>
+                <span><i class="glyphicon glyphicon-user"></i></span>
+                <span toggle="#password-field" class="fa fa-fw fa-eye field-icon toggle-password"></span>
+                <input v-model.trim="passwd" name="passwd" id="password-field" type="password" class="form-control" placeholder="Contraseña" type="text">
+                
+            </div>
+            </div>
+    
+
+
+            <!-- Button -->
+            
+            <div class="row justify-content-center">
+                <a href="index.html"><span></span><button @click="createUser"> Registrado <span class="glyphicon glyphicon-send"></span></button></a>
+            </div>
+            
+
+        </section>
+        </div>
+
+
+
+        <script>
+                
+            window.app  = new Vue({
+                el: '#app',
+                data: {
+                    name: '',
+					email:'',
+					passwd: ''
+                },
+                methods:{
+                    createUser(){
+                        var self = this
+
+
+                        var gQL = `mutation{addUser( name: "${this.name}",email: "${this.email}",passwd: "${this.passwd}"){
+                        name
+                        }}`
+
+                        console.log(gQL)
+
+						fetch('/graphql', { 
+                   		 method: 'POST',
+                    	 headers: {'Content-Type': 'application/json'},
+                    	 body: JSON.stringify({ query: gQL })
+            			})
+            			.then(function(r){return r.json()})
+            			.then(function(json){console.log(json)})
+            			.catch(function(error){console.log(error)})  
+                    },  
+                },
+                mounted(){
+            
+                var self = this
+                var ES = new EventSource('/news') //ruta API con notificaciones
+
+                console.log('Creando listener de eventos de servidor...')
+                ES.addEventListener('new-user', function(event){
+                    alert("Se ha añadido un usuario")
+                    var data = JSON.parse(JSON.parse(event.data)) 
+                    //bytes to string -> string to json
+                   self.user.push(data)
+                }, false)
+                }
+            })
+        </script>
+
+    </body>
+</html>

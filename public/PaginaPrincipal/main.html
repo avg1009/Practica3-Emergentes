@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/PaginaPrincipal/styles.css">
+    <title>MusicDation</title>
+</head>
+
+<body>
+    <div class="container">
+        <aside>
+            <div class="menu">
+                <a class="active" href="main.html"><span><img src="../images/Logo.png" alt=""></a>
+                <a href="buscarPost.html"><span><img src="../images/PaginaPrincipal/search.svg" alt=""></span>Buscar Post</a>
+                <a href="buscarCancion.html"><span><img src="../images/PaginaPrincipal/search.svg" alt=""></span>Buscar Cancion</a>
+                <a href="buscarUsuario.html"><span><img src="../images/PaginaPrincipal/search.svg" alt=""></span>Buscar Usuario</a>
+                <a href="crearPost.html"><span><img src="../images/PaginaPrincipal/add.svg" alt=""></span>Crear Post</a>
+                <a href="favoritosPost.html"><span><img src="../images/PaginaPrincipal/heart.svg" alt=""></span>Post que te gustan</a>
+            </div>
+            </nav>
+        </aside>
+        <section>
+            <header>
+                <div class="botones_prev_next">
+                    <span class="btn_prev"><img src="../images/PaginaPrincipal/prev.svg" alt=""></span>
+                    <span class="btn_next"><img src="../images/PaginaPrincipal/next.svg" alt=""></span>
+                </div>
+
+                <div class="suscribcion">
+                    <div class="mejora_cuenta">
+                        <a href="../index.html"><span></span><button> CERRAR SESIÓN </button></a>
+                        
+                    </div>
+                    <div class="perfil">
+                        <span class="circulo"><img src="../images/PaginaPrincipal/user.svg" alt=""></span>
+                        <span class="nombre">Usuario</span>
+                        <span><img src="../images/PaginaPrincipal/salir.svg" alt=""></span>
+                    </div>
+                </div>
+            </header>
+                
+         
+        </section>
+        
+    </div>
+
+    <script>
+                
+        window.app  = new Vue({
+            el: '#app',
+            data: {
+                name: '',
+                email:'',
+                passwd: ''
+            },
+            methods:{
+                createUser(){
+                    var self = this
+
+
+                    var gQL = `mutation{addUser( name: "${this.name}",email: "${this.email}",passwd: "${this.passwd}"){
+                    name
+                    }}`
+
+                    console.log(gQL)
+
+                    fetch('/graphql', { 
+                        method: 'POST',
+                     headers: {'Content-Type': 'application/json'},
+                     body: JSON.stringify({ query: gQL })
+                    })
+                    .then(function(r){return r.json()})
+                    .then(function(json){console.log(json)})
+                    .catch(function(error){console.log(error)})  
+                },  
+            },
+            mounted(){
+        
+            var self = this
+            var ES = new EventSource('/news') //ruta API con notificaciones
+
+            console.log('Creando listener de eventos de servidor...')
+            ES.addEventListener('new-user', function(event){
+                alert("Se ha añadido un usuario")
+                var data = JSON.parse(JSON.parse(event.data)) 
+                //bytes to string -> string to json
+               self.user.push(data)
+            }, false)
+            }
+        })
+    </script>
+</body>
+
+
+</html>

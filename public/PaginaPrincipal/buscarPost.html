@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>MusicDation</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+        <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet">
+    
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+        
+        <link rel="stylesheet" href="../css/style.css">
+
+        <script src="//cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.min.js"></script>
+        <script src="//unpkg.com/babel-polyfill@latest/dist/polyfill.min.js"></script>
+        <script src="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.js"></script>
+    </head>
+    <body class="img js-fullheight" style="background-image: url(../images/BackgroundBuscar.jpg);">
+       
+        <div id="app">
+            <section class="ftco-section">
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-md-6 text-center mb-5">
+                            <a href="./main.html"><h2 class="heading-section"><span><img src="../images/Logo.png"></h2></a>
+                        </div>
+                    </div>
+                    <div class="row justify-content-center">
+                        <div class="col-md-6 col-lg-4">
+                            <div class="login-wrap p-0">
+                          <h3 class="mb-4 text-center">Busca tu post Aqui</h3>
+
+            <!-- Text input-->
+
+            <div>
+            <label></label>
+            <div>
+                <span><i class="glyphicon glyphicon-user"></i></span>
+                <input v-model.trim="title" class="form-control" name="title" placeholder="Nombre de la canciÃ³n" type="text">
+            </div>
+            </div>
+
+    
+            <div class="container" v-for="post in posts">
+                <h3 class="title">{{post.title}}</h3>
+                <div class="content">
+                    <!--<a :href="users.poster" target="_self">-->
+                    <div class="content-overlay"></div>
+                    <div class="content-details fadeIn-bottom">
+                        <p>{{post.title}}</p>
+                        <p>{{post.author}}</p>
+                        <p>{{post.gender}}</p>
+                        <p>{{post.album}}</p>
+                        <p>{{post.content}}</p>
+                        <p>{{post.comment}}</p>
+
+                    </div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Button -->
+            <div>
+            <label></label>
+            <div>
+            <button @click="showPost">Buscar <span class="glyphicon glyphicon-send"></span></button>
+            </div>
+            </div>
+
+
+        </div>
+
+
+
+        <script>
+                
+            window.app  = new Vue({
+                el: '#app',
+                data: {
+                    posts: [],
+                    title: ''
+                },
+                methods:{
+                    showPost(){
+                        var self = this
+
+
+                        var gQL = `query{searchPost( title: "${this.title}"){
+                        title
+                        }}`
+
+                        console.log(gQL)
+
+                        fetch('/graphql?query=' + encodeURIComponent(gQL))
+
+                        .then(function(r){return r.json()})
+                        .then(function(json){
+                        self.musicDation = json.data.searchPost
+                        })
+                        .catch(function(error){console.log(error)})
+                    },
+
+                    getPost(){
+                        var self = this
+                        var gQL = `query{searchPost(post: "${this.title}")}`
+                        console.log(gQL)
+                        console.log(data)
+                        fetch('/graphql?query=' + encodeURIComponent(gQL))
+                        .then(function(r){return r.json()})
+                        .then(function(json){
+                        self.posts = json.data.post
+                        })
+                        .catch(function(error){console.log(error)})
+                    }
+                   
+                },
+                mounted(){
+            
+                var self = this
+                var ES = new EventSource('/news') //ruta API con notificaciones
+                console.log('Creando listener de eventos de servidor...')
+                ES.addEventListener('new-post', function(event){
+                    var data = JSON.parse(JSON.parse(event.data)) 
+                    //bytes to string -> string to json
+                   
+                }, false)
+                }
+            })
+        </script>
+
+    </body>
+</html>

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>MusicDation</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+        <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet">
+    
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+        
+        <link rel="stylesheet" href="../css/style.css">
+
+        <script src="//cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.min.js"></script>
+        <script src="//unpkg.com/babel-polyfill@latest/dist/polyfill.min.js"></script>
+        <script src="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.js"></script>
+    </head>
+    <body class="img js-fullheight" style="background-image: url(../images/BackgroundBuscar.jpg);">
+       
+        <div id="app">
+            <section class="ftco-section">
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-md-6 text-center mb-5">
+                            <a href="./main.html"><h2 class="heading-section"><span><img src="../images/Logo.png"></h2></a>
+                        </div>
+                    </div>
+                    <div class="row justify-content-center">
+                        <div class="col-md-6 col-lg-4">
+                            <div class="login-wrap p-0">
+                          <h3 class="mb-4 text-center">Busca tu canción Aqui</h3>
+            <!-- Text input-->
+
+            <div>
+            <label></label>
+            <div>
+                <span><i class="glyphicon glyphicon-user"></i></span>
+                <input v-model.trim="title" class="form-control" name="title" placeholder="Nombre de la canción" type="text">
+            </div>
+            </div>
+
+    
+            <div class="container" v-for="song in songs">
+                <h3 class="name">{{song.title}}</h3>
+                <div class="content">
+                    <!--<a :href="users.poster" target="_self">-->
+                    <div class="content-overlay"></div>
+                    <div class="content-details fadeIn-bottom">
+                        <p>{{song.title}}</p>
+                        <p>{{song.author}}</p>
+                        <p>{{song.gender}}</p>
+                        <p>{{song.album}}</p>
+
+                    </div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Button -->
+            <div>
+            <label></label>
+            <div>
+            <button @click="showSong">Buscar <span class="glyphicon glyphicon-send"></span></button>
+            </div>
+            </div>
+
+            </section>
+        </div>
+
+
+
+        <script>
+                
+            window.app  = new Vue({
+                el: '#app',
+                data: {
+                    songs: [],
+                    title: ''
+                },
+                methods:{
+                    showSong(){
+                        var self = this
+
+
+                        var gQL = `query{searchSong( title: "${this.title}"){
+                        title
+                        author
+                        
+                        }}`
+
+                        console.log(gQL)
+
+                        fetch('/graphql?query=' + encodeURIComponent(gQL))
+
+                        .then(function(r){return r.json()})
+                        .then(function(json){
+                        self.musicDation = json.data.searchSong
+                        })
+                        .catch(function(error){console.log(error)})
+                    },
+
+                    getSong(){
+                        var self = this
+                        var gQL = `query{searchSong(song: "${this.title}")}`
+                        console.log(gQL)
+                        console.log(data)
+                        fetch('/graphql?query=' + encodeURIComponent(gQL))
+                        .then(function(r){return r.json()})
+                        .then(function(json){
+                        self.users = json.data.users
+                        })
+                        .catch(function(error){console.log(error)})
+                    }
+                   
+                },
+                mounted(){
+            
+                var self = this
+                var ES = new EventSource('/news') //ruta API con notificaciones
+                console.log('Creando listener de eventos de servidor...')
+                ES.addEventListener('new-post', function(event){
+                    var data = JSON.parse(JSON.parse(event.data)) 
+                    //bytes to string -> string to json
+                   
+                }, false)
+                }
+            })
+        </script>
+
+    </body>
+</html>
