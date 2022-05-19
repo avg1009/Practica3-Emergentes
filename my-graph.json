@@ -1,0 +1,49 @@
+{
+    "@context": "https://schema.org/",
+    "@type": "WebAPI",
+    "name": "MusicDation",
+    "description": "Aplicación para recomendar musica a tus afines",
+    "documentation":{
+      
+    },
+    "provider": [{
+      "@type": "Person",
+      "@id":"https://www.linkedin.com/in/adolfo-jes%C3%BAs-vi%C3%B1%C3%A9-ghezzi-131296230/",
+      "name":"Adolfo Jesús Viñé Ghezzi",
+      "alumniOf":"Universidad Jaume I",
+      "birthDate":"25/11/1999",
+      "email":"musicDation.adolfo@gmail.com",
+      "gender":"https://schema.org/Male",
+      "telephone":"754235148"
+      
+    },{  
+      "@type": "Person",
+      "@id":"https://www.linkedin.com/in/sergio-segura-mart%C3%AD-875b2022b/",
+      "name":"Sergio Segura Martí",
+      "alumniOf":"Universidad Jaume I",
+      "birthDate":"24/02/1999",
+      "email":"musicDation.sergio@gmail.com",
+      "gender":"https://schema.org/Male",
+      "telephone":"684521345"
+      
+    }],
+      "audience":{
+      "@type": "Audience",
+      "audienceType": "Melomaniac",
+      "description": "Enfocado a gente con intereses musicales"
+        
+    },
+    "offers":{
+      "@type": "Offers",
+      "category": "Songs",
+      "aggregateRating": "AggregateRating",
+      "offeredBy" : "Person",
+      "review" : "Review"
+    },
+    
+    "isSimilarTo": "Service",
+    
+    "slogan" : "Musica por y para todos"   
+    
+    
+  }
